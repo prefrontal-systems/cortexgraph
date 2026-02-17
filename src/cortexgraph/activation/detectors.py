@@ -7,6 +7,7 @@ and provides high-level detection functions for save/recall intent.
 
 import math
 import time
+from typing import Literal
 
 from cortexgraph.activation.config import ActivationConfig, get_signal_weight
 from cortexgraph.activation.entity_extraction import extract_entities
@@ -285,7 +286,7 @@ def detect_recall_intent(
 
 
 def create_activation_signal(
-    signal_type: str,
+    signal_type: Literal["save", "recall", "reinforce"],
     confidence: float,
     matched_patterns: list[str],
     context: str,
@@ -306,7 +307,7 @@ def create_activation_signal(
         detect_recall_intent() for MCP tool integration.
     """
     return ActivationSignal(
-        type=signal_type,  # type: ignore[arg-type]
+        type=signal_type,
         confidence=confidence,
         matched_patterns=matched_patterns,
         context=context[:1000],  # Truncate to max length

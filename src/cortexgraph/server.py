@@ -61,10 +61,10 @@ def get_version() -> str:
     try:
         # Try Python 3.11+ built-in tomllib
         try:
-            import tomllib
+            import tomllib  # type: ignore[import-not-found]
         except ImportError:
             # Fall back to toml package for older Python
-            import tomli as tomllib  # type: ignore
+            import tomli as tomllib  # type: ignore[import-not-found]
 
         # Find pyproject.toml relative to this file
         project_root = Path(__file__).parent.parent.parent
@@ -73,7 +73,8 @@ def get_version() -> str:
         if pyproject_path.exists():
             with open(pyproject_path, "rb") as f:
                 pyproject_data = tomllib.load(f)
-                return pyproject_data.get("project", {}).get("version", "unknown")
+                version: str = pyproject_data.get("project", {}).get("version", "unknown")
+                return version
     except Exception as e:
         logger.debug(f"Could not read version from pyproject.toml: {e}")
 

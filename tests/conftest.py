@@ -275,7 +275,7 @@ def mock_embeddings_setup(monkeypatch, module_path):
 
     Example:
         model = mock_embeddings_setup(monkeypatch, "cortexgraph.tools.save")
-        # Now _SentenceTransformer in save module returns mock model
+        # Now SentenceTransformer in save module returns mock model
     """
     from unittest.mock import MagicMock
 
@@ -290,7 +290,7 @@ def mock_embeddings_setup(monkeypatch, module_path):
 
     # Patch transformer class
     mock_transformer_class = MagicMock(return_value=mock_model)
-    monkeypatch.setattr(f"{module_path}._SentenceTransformer", mock_transformer_class)
+    monkeypatch.setattr(f"{module_path}.SentenceTransformer", mock_transformer_class)
 
     return mock_model
 

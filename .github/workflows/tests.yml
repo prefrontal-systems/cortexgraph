@@ -30,7 +30,7 @@ jobs:
       run: uv venv --python ${{ matrix.python-version }}
 
     - name: Install dependencies
-      run: uv pip install -e ".[dev]"
+      run: uv pip install -e ".[dev,embeddings]"
 
     - name: Run tests with pytest
       run: uv run pytest --cov=cortexgraph --cov-report=xml --cov-report=term-missing
@@ -62,7 +62,7 @@ jobs:
       run: uv venv --python 3.10
 
     - name: Install dependencies
-      run: uv pip install -e ".[dev]"
+      run: uv pip install -e ".[dev,embeddings]"
 
     - name: Run ruff check
       run: uv run ruff check src/cortexgraph tests

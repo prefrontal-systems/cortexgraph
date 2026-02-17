@@ -260,7 +260,7 @@ class TestSaveMemory:
         assert memory.embed is None
 
     @patch("cortexgraph.tools.save.SENTENCE_TRANSFORMERS_AVAILABLE", True)
-    @patch("cortexgraph.tools.save._SentenceTransformer")
+    @patch("cortexgraph.tools.save.SentenceTransformer")
     def test_save_memory_embedding_import_error(
         self, mock_transformer, mock_config_embeddings, temp_storage
     ):

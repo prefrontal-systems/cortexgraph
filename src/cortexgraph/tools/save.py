@@ -3,7 +3,7 @@
 import logging
 import time
 import uuid
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any, cast
 
 from ..config import get_config
 from ..context import db, mcp
@@ -20,20 +20,15 @@ from ..security.validators import (
 )
 from ..storage.models import Memory, MemoryMetadata
 
-if TYPE_CHECKING:
-    from sentence_transformers import SentenceTransformer  # pyright: ignore[reportMissingImports]
-
 logger = logging.getLogger(__name__)
 
 # Optional dependency for embeddings
-_SentenceTransformer: "type[SentenceTransformer] | None"
 try:
-    from sentence_transformers import SentenceTransformer  # pyright: ignore[reportMissingImports]
+    from sentence_transformers import SentenceTransformer
 
-    _SentenceTransformer = SentenceTransformer
     SENTENCE_TRANSFORMERS_AVAILABLE = True
 except ImportError:
-    _SentenceTransformer = None
+    SentenceTransformer = None  # type: ignore[assignment,misc]
     SENTENCE_TRANSFORMERS_AVAILABLE = False
 
 # Global model cache to avoid reloading on every request
@@ -42,12 +37,12 @@ _model_cache: dict[str, Any] = {}
 
 def _get_embedding_model(model_name: str) -> "SentenceTransformer | None":
     """Get cached embedding model or create new one."""
-    if not SENTENCE_TRANSFORMERS_AVAILABLE or _SentenceTransformer is None:
+    if not SENTENCE_TRANSFORMERS_AVAILABLE or SentenceTransformer is None:
         return None
 
     if model_name not in _model_cache:
         try:
-            _model_cache[model_name] = _SentenceTransformer(model_name)
+            _model_cache[model_name] = SentenceTransformer(model_name)
         except Exception:
             return None
 

@@ -1,22 +1,17 @@
 """Backfill embeddings tool - generate embeddings for memories that lack them."""
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from ..context import db, mcp
 from ..security.validators import validate_positive_int
 
-if TYPE_CHECKING:
-    from sentence_transformers import SentenceTransformer  # pyright: ignore[reportMissingImports]
-
 # Optional dependency for embeddings
-_SentenceTransformer: "type[SentenceTransformer] | None"
 try:
-    from sentence_transformers import SentenceTransformer  # pyright: ignore[reportMissingImports]
+    from sentence_transformers import SentenceTransformer
 
-    _SentenceTransformer = SentenceTransformer
     SENTENCE_TRANSFORMERS_AVAILABLE = True
 except ImportError:
-    _SentenceTransformer = None
+    SentenceTransformer = None  # type: ignore[assignment,misc]
     SENTENCE_TRANSFORMERS_AVAILABLE = False
 
 
@@ -99,7 +94,7 @@ def backfill_embeddings(
         }
 
     # Load embedding model
-    if _SentenceTransformer is None:
+    if SentenceTransformer is None:
         return {
             "success": False,
             "error": "sentence-transformers not available",
@@ -107,7 +102,7 @@ def backfill_embeddings(
         }
 
     try:
-        embedding_model = _SentenceTransformer(model)
+        embedding_model = SentenceTransformer(model)
     except Exception as e:
         return {
             "success": False,

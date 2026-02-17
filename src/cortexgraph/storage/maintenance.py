@@ -8,22 +8,16 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from .jsonl_storage import JSONLStorage
 
-if TYPE_CHECKING:
-    from sentence_transformers import SentenceTransformer  # pyright: ignore[reportMissingImports]
-
 # Optional dependency for embeddings
-_SentenceTransformer: type[SentenceTransformer] | None
 try:
-    from sentence_transformers import SentenceTransformer  # pyright: ignore[reportMissingImports]
+    from sentence_transformers import SentenceTransformer
 
-    _SentenceTransformer = SentenceTransformer
     SENTENCE_TRANSFORMERS_AVAILABLE = True
 except ImportError:
-    _SentenceTransformer = None
+    SentenceTransformer = None  # type: ignore[assignment,misc]
     SENTENCE_TRANSFORMERS_AVAILABLE = False
 
 
@@ -101,12 +95,12 @@ def cmd_backfill_embeddings(
         return 0
 
     # Load model
-    if _SentenceTransformer is None:
+    if SentenceTransformer is None:
         print("ERROR: sentence-transformers not available")
         return 1
 
     print(f"Loading model: {model}...")
-    embedding_model = _SentenceTransformer(model)
+    embedding_model = SentenceTransformer(model)
 
     # Process memories
     processed = 0
