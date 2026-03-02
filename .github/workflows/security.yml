@@ -37,7 +37,7 @@ jobs:
           uv run bandit -r src/cortexgraph -f json -o bandit-report.json || true
 
       - name: Upload Bandit results
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: bandit-results
@@ -120,7 +120,7 @@ jobs:
           uv run pip-audit --desc
 
       - name: Upload pip-audit results
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: pip-audit-results
@@ -168,7 +168,7 @@ jobs:
           uv run cyclonedx-py environment --output-format JSON --output-file sbom.json
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: cyclonedx-sbom
           path: sbom.json
